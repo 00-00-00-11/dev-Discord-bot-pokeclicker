@@ -50,13 +50,15 @@ module.exports = {
   execute     : async (msg, args) => {
     // Check if user claimed within the last 24 hours
     const lastClaim = await getLastClaimTime(msg.author);
-    // TODO: display time left until next claim
     if (lastClaim >= (Date.now() - DAY)) {
       const timeLeft = (+lastClaim + DAY) - Date.now();
       const hours = Math.floor(timeLeft % DAY / HOUR).toString().padStart(2, '0');
       const minutes = Math.floor(timeLeft % HOUR / MINUTE).toString().padStart(2, '0');
       const seconds = Math.floor(timeLeft % MINUTE / SECOND).toString().padStart(2, '0');
-      const timeRemaining = `${hours} hours ${minutes} minutes ${seconds} seconds`;
+      let timeRemaining = '';
+      if (+hours) timeRemaining += `${hours} hours `;
+      if (+hours || +minutes) timeRemaining += `${minutes} minutes `;
+      timeRemaining += `${seconds} seconds`;
       return msg.channel.send({
         embed: new MessageEmbed().setColor('#e74c3c').setDescription(`${msg.author}\nYou've already claimed your <:money:737206931759824918> for today\nYou can claim again in ${timeRemaining}`),
       });

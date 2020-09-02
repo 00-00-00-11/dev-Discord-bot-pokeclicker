@@ -43,6 +43,7 @@ async function getAmount(user, table = 'coins'){
   return +amount;
 }
 
+// TODO: Fix last claim being reset
 async function addAmount(user, amount = 1, table = 'coins'){
   // Check amount is valid
   amount = +amount;
