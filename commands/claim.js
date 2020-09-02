@@ -1,8 +1,8 @@
 const { getDB, getUserID, addAmount } = require('../database.js');
 
 const MINUTE = 1000 * 60;
-const HOUR = 1000 * 60 * 60;
-const DAY = 1000 * 60 * 60 * 24;
+const HOUR = MINUTE * 60;
+const DAY = HOUR * 24;
 
 const getLastClaimTime = async (user) => {
   const [
@@ -35,8 +35,8 @@ const setLastClaimTime = async (user) => {
 };
 
 module.exports = {
-  name        : 'daily',
-  aliases     : [],
+  name        : 'claim',
+  aliases     : ['timely'],
   description : 'Short description',
   args        : [],
   guildOnly   : true,
