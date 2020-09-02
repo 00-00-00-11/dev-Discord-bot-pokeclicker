@@ -15,9 +15,12 @@ module.exports = {
     // Check user has entered a valid amount
     if (isNaN(amount) || amount < 1 || amount > 40) return msg.channel.send('Invalid amount specified, Must be between 1 and 40...');
 
-    const results = await getTop(msg.guild, amount);
+    const results = await getTop(amount);
 
-    const output = [`__***Top ${results.length} users:***__`, ...results.map((res, place) => `**#${place + 1}** _\`(${res.points.toLocaleString('en-NZ')} points)\`_ ${msg.guild.members.cache.get(res.user) || 'Inactive Member'}`)];
+    const output = [
+      `__***Top ${results.length} trainers:***__`,
+      ...results.map((res, place) => `**#${place + 1}** _\`(${res.amount ? res.amount.toLocaleString('en-NZ') : 0} coins)\`_ ${msg.guild.members.cache.get(res.user) || 'Inactive Member'}`),
+    ];
     if (output.join('\n').length >= 2000)
       return msg.reply('Sorry this list is too large for discord, try a smaller amount');
 
