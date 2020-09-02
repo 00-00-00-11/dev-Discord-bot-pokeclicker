@@ -8,7 +8,7 @@ const {
 
 module.exports = {
   name        : 'dailydeal',
-  aliases     : ['dd', 'daily', 'deal', 'deals', 'dailydeals', 'ug', 'underground'],
+  aliases     : ['dd', 'deals', 'dailydeals', 'ug', 'underground'],
   description : 'Get a list of daily deals for the next 5 days',
   args        : ['from date(2020-12-31)?'],
   guildOnly   : true,
