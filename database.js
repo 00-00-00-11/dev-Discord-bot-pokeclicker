@@ -37,13 +37,15 @@ async function getAmount(user, table = 'coins'){
     getUserID(user),
   ]);
 
-  const { amount } = await db.get(`SELECT amount FROM ${table} WHERE user=?`, user_id) || { amount: 0 };
+  const result = await db.get(`SELECT amount FROM ${table} WHERE user=?`, user_id);
+  if (!result) await db.run(`INSERT OR REPLACE INTO ${table} (user) VALUES (?)`, user_id);
   db.close();
+
+  const { amount = 0 } = result || {};
 
   return +amount;
 }
 
-// TODO: Fix last claim being reset
 async function addAmount(user, amount = 1, table = 'coins'){
   // Check amount is valid
   amount = +amount;
@@ -63,7 +65,7 @@ async function addAmount(user, amount = 1, table = 'coins'){
     $amount: amount,
   };
 
-  await db.run(`INSERT OR REPLACE INTO ${table} (user, amount) VALUES ($user_id, $amount)`, data);
+  await db.run(`UPDATE ${table} SET amount=$amount WHERE user=$user_id`, data);
   db.close();
 
   return amount;
@@ -91,7 +93,7 @@ async function setAmount(user, amount = 1, table = 'coins'){
     $amount: amount,
   };
 
-  await db.run(`INSERT OR REPLACE INTO ${table} (user, amount) VALUES ($user_id, $amount)`, data);
+  await db.run(`UPDATE ${table} SET amount=$amount WHERE user=$user_id`, data);
   db.close();
 
   return amount;
