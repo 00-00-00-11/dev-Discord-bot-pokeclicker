@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 const { getTop } = require('../database.js');
 
 module.exports = {
@@ -17,13 +18,15 @@ module.exports = {
 
     const results = await getTop(amount);
 
-    const output = [
-      `__***Top ${results.length} trainers:***__`,
-      ...results.map((res, place) => `**#${place + 1}** _\`(${res.amount ? res.amount.toLocaleString('en-NZ') : 0} coins)\`_ ${msg.guild.members.cache.get(res.user) || 'Inactive Member'}`),
-    ];
-    if (output.join('\n').length >= 2000)
-      return msg.reply('Sorry this list is too large for discord, try a smaller amount');
+    const embed = new MessageEmbed()
+      .setTitle(`__***Top ${results.length} Trainers:***__`)
+      .setColor('#3498db');
+      
+    results.forEach((res, place) => {
+      const user = msg.guild.members.cache.get(res.user);
+      embed.addField(`**#${place + 1}**  ${user ? user.user.tag : 'Inactive Member'}`, `${res.amount ? res.amount.toLocaleString('en-NZ') : 0} <:money:737206931759824918>`, true);
+    });
 
-    msg.channel.send('Gathering Data...').then(m=>m.edit(output));
+    msg.channel.send('Gathering Data...').then(m=>m.edit({ embed }));
   },
 };
