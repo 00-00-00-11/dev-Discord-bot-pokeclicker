@@ -22,11 +22,8 @@ module.exports = {
       .setTitle(`__***Top ${results.length} Trainers:***__`)
       .setColor('#3498db');
       
-    results.forEach((res, place) => {
-      const user = msg.guild.members.cache.get(res.user);
-      embed.addField(`**#${place + 1}**  ${user ? user.user.tag : 'Inactive Member'}`, `${res.amount ? res.amount.toLocaleString('en-NZ') : 0} <:money:737206931759824918>`, true);
-    });
+    embed.setDescription(results.map((res, place) => `**#${place + 1}** \`${res.amount ? res.amount.toLocaleString('en-NZ') : 0}\` <:money:737206931759824918> ${msg.guild.members.cache.get(res.user) || 'Inactive Member'}`));
 
-    msg.channel.send('Gathering Data...').then(m=>m.edit({ embed }));
+    msg.channel.send({ embed });
   },
 };
