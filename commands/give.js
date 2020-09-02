@@ -10,7 +10,7 @@ module.exports = {
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['MANAGE_GUILD'],
   execute     : async (msg, args) => {
-    const points = +(args.find(arg=>/^\d+$/.test(arg)) || 10);
+    const points = +(args.find(arg=>/^-?\d+$/.test(arg)) || 10);
     if (isNaN(points))
       return msg.reply('Invalid number of points specified..');
     if (!msg.mentions.users.size)
