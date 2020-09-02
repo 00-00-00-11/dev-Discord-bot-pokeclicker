@@ -1,4 +1,4 @@
-const { addPoints } = require('../database.js');
+const { addAmount } = require('../database.js');
 
 module.exports = {
   name        : 'give',
@@ -17,7 +17,7 @@ module.exports = {
       return msg.reply('You didn\'t mention who to give points..');
     // Add 1 point to the verifier
     const user = msg.mentions.users.first();
-    const total_points = await addPoints(msg.guild, user, points);
+    const total_points = await addAmount(user, points);
     msg.channel.send(`${user} given ${points.toLocaleString('en-NZ')} points, New total is ${total_points.toLocaleString('en-NZ')} points`);
   },
 };
