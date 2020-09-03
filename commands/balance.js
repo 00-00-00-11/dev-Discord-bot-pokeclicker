@@ -7,7 +7,7 @@ module.exports = {
   description : 'Get your current balance',
   args        : [],
   guildOnly   : true,
-  cooldown    : 0.5,
+  cooldown    : 3,
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['MANAGE_CHANNELS', 'MANAGE_MESSAGES'],
   execute     : async (msg, args) => {
