@@ -13,7 +13,7 @@ const calcBetAmount = (bet, balance) => {
     default:
       return +bet;
   }
-}
+};
 
 module.exports = {
   betRegex,
