@@ -31,9 +31,9 @@ module.exports = {
       description: 'Alternate letter form for Unown',
     },
     {
-      name: 'Unown (D)',
+      name: 'Unown (R)',
       price: 700,
-      image: 'https://pokeclicker-dev.github.io/pokeclicker/assets/images/pokemon/201.03.png',
+      image: 'https://pokeclicker-dev.github.io/pokeclicker/assets/images/pokemon/201.17.png',
       description: 'Alternate letter form for Unown',
     },
     {
