@@ -1,11 +1,31 @@
 const { MessageEmbed } = require('discord.js');
 const { getAmount, removeAmount } = require('../database.js');
-const { shopItems, postPages } = require('../helpers.js');
+const { shopItems, postPages, SeededRand } = require('../helpers.js');
 
-const generateCode = (discord_id, code_name) => {
-  code_name = `[Discord] ${code_name}`;
-  const val = discord_id ^ parseInt(code_name.replace(/(\W|_)/g, ''), 36);
-  return (val > 0 ? val : -val).toString(36).toUpperCase();
+const generateCode = (discordID, code) => {
+  discordID = +discordID;
+  // reverse the string (for names that are similar - forms)
+  const codeSeed = code.split('').reverse()
+    // map to the character code
+    .map(l => l.charCodeAt(0))
+    // multiply the numbers (should be random enough)
+    .reduce((s,b) => s * (b / 10), 1);
+
+  SeededRand.seed(discordID + codeSeed);
+
+  const arr = [];
+  for (let i = 0; i < 14; i++) {
+    let char;
+    while (char == undefined || char.length != 1) {
+      char = SeededRand.intBetween(0, 35).toString(36);
+    }
+    arr.push(char);
+  }
+
+  arr[4] = '-';
+  arr[9] = '-';
+
+  return arr.join('').toUpperCase();
 };
 
 module.exports = {
