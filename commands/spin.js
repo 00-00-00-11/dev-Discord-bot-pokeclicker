@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const { getAmount, addAmount } = require('../database.js');
-const { betRegex, validBet, getBetAmount } = require('../helpers.js');
+const { betRegex, validBet, calcBetAmount } = require('../helpers.js');
 
 const multipliers = [1.5, 1.7, 2.4, 0.2, 1.2, 0.1, 0.3, 0.5];
 const arrows      = ['↖️', '⬆️', '↗️','⬅️','➡️', '↙️', '⬇️', '↘️'];
@@ -28,7 +28,7 @@ module.exports = {
 
     const balance = await getAmount(msg.author);
 
-    bet = getBetAmount(bet, balance);
+    bet = calcBetAmount(bet, balance);
 
     if (bet > balance) {
       const embed = new MessageEmbed().setColor('#e74c3c').setDescription(`${msg.author}\nNot enough coins.`);
