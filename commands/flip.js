@@ -33,7 +33,7 @@ module.exports = {
   guildOnly   : true,
   cooldown    : 0.5,
   botperms    : ['SEND_MESSAGES'],
-  userperms   : ['MANAGE_CHANNELS', 'MANAGE_MESSAGES'],
+  userperms   : ['SEND_MESSAGES'],
   execute     : async (msg, args) => {
     let bet = args.find(a => betRegex.test(a));
     let side = args.find(a => new RegExp(`^(${Object.keys(coinSides).join('|')})$`).test(a));
@@ -69,7 +69,7 @@ module.exports = {
 
     const output = [
       msg.author,
-      (coinSide ? '**HEADS**' : '**TAILS**') + (win ? ' - WIN' : ' - LOSE'),
+      `**${(win ? 'WIN' : 'LOSE')}** - ${(coinSide ? 'HEADS' : 'TAILS')}`,
       `**Winnings: ${winnings.toLocaleString('en-US')} <:money:737206931759824918>**`,
     ].join('\n');
 

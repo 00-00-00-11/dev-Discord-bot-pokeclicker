@@ -18,7 +18,7 @@ const postPages = async (msg, pages, page = 1) => {
   const forwardsFilter = (reaction, user) => reaction.emoji.name === '➡' && user.id === msg.author.id;
 
   // Allow reactions for up to x ms
-  const timer = 1e5; // (2 minutes)
+  const timer = 1e5; // (100 seconds)
   const backwards = botMsg.createReactionCollector(backwardsFilter, {time: timer});
   const forwards = botMsg.createReactionCollector(forwardsFilter, {time: timer});
 
