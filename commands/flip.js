@@ -69,6 +69,7 @@ module.exports = {
 
     const output = [
       msg.author,
+      (coinSide ? '**HEADS**' : '**TAILS**') + (win ? ' - WIN' : ' - LOSE'),
       `**Winnings: ${winnings.toLocaleString('en-US')} <:money:737206931759824918>**`,
     ].join('\n');
 
