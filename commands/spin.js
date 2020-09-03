@@ -10,10 +10,10 @@ const getArrow = (multiplier) => arrows[multipliers.findIndex(m => m == multipli
 module.exports = {
   name        : 'spin',
   aliases     : ['wheel'],
-  description : 'Short description',
+  description : 'Spin the wheel for a prize',
   args        : ['amount'],
   guildOnly   : false,
-  cooldown    : 3,
+  cooldown    : 0.5,
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['MANAGE_CHANNELS', 'MANAGE_MESSAGES'],
   execute     : async (msg, args) => {
@@ -31,7 +31,10 @@ module.exports = {
         bet = balance;
         break;
       case 'half':
-        bet = Math.floor(balance / 2);
+        bet = Math.max(1, Math.floor(balance / 2));
+        break;
+      case 'quater':
+        bet = Math.max(1, Math.floor(balance / 4));
         break;
       default:
         bet = +bet;
