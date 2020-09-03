@@ -30,7 +30,7 @@ module.exports = {
   aliases     : ['coin'],
   description : 'Flip a coin for a prize',
   args        : ['amount', 'side (h|t)'],
-  guildOnly   : false,
+  guildOnly   : true,
   cooldown    : 0.5,
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['MANAGE_CHANNELS', 'MANAGE_MESSAGES'],

@@ -13,7 +13,7 @@ module.exports = {
   aliases     : ['wheel'],
   description : 'Spin the wheel for a prize',
   args        : ['amount'],
-  guildOnly   : false,
+  guildOnly   : true,
   cooldown    : 0.5,
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['MANAGE_CHANNELS', 'MANAGE_MESSAGES'],
