@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const { getAmount, addAmount } = require('../database.js');
+const { betRegex, validBet, getBetAmount } = require('../helpers.js');
 
 const multipliers = [1.5, 1.7, 2.4, 0.2, 1.2, 0.1, 0.3, 0.5];
 const arrows      = ['↖️', '⬆️', '↗️','⬅️','➡️', '↙️', '⬇️', '↘️'];
@@ -17,29 +18,17 @@ module.exports = {
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['MANAGE_CHANNELS', 'MANAGE_MESSAGES'],
   execute     : async (msg, args) => {
-    let [ bet ] = args;
+    let bet = args.find(a => betRegex.test(a));
 
-    if (isNaN(bet) && !['all', 'half'].includes(bet) || bet <= 0) {
+    // Check the bet amount is correct
+    if (!validBet(bet)) {
       const embed = new MessageEmbed().setColor('#e74c3c').setDescription(`${msg.author}\nInvalid bet amount: \`${bet}\``);
       return msg.channel.send({ embed });
     }
 
     const balance = await getAmount(msg.author);
 
-    switch(bet) {
-      case 'all':
-        bet = balance;
-        break;
-      case 'half':
-        bet = Math.max(1, Math.floor(balance / 2));
-        break;
-      case 'quater':
-        bet = Math.max(1, Math.floor(balance / 4));
-        break;
-      default:
-        bet = +bet;
-        break;
-    }
+    bet = getBetAmount(bet, balance);
 
     if (bet > balance) {
       const embed = new MessageEmbed().setColor('#e74c3c').setDescription(`${msg.author}\nNot enough coins.`);
