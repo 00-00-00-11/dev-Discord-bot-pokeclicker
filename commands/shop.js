@@ -12,6 +12,10 @@ module.exports = {
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['MANAGE_CHANNELS', 'MANAGE_MESSAGES'],
   execute     : async (msg, args) => {
+    let [ page = 1 ] = args;
+
+    if (isNaN(page) || page <= 0) page = 1;
+
     const balance = await getAmount(msg.author);
 
     const pages = [];
@@ -24,8 +28,7 @@ module.exports = {
         .addField('Name', item.name, true)
         .addField('Price', `${item.price} <:money:737206931759824918>`, true)
         .addField('Description', item.description)
-        .setFooter(`Page: ${index + 1}/${shopItems.length}`);
-        //.setFooter(`Balance: ${balance.toLocaleString('en-US')}`);
+        .setFooter(`Balance: ${balance.toLocaleString('en-US')} | Page: ${index + 1}/${shopItems.length}`);
 
       pages.push({ embed });
     });
