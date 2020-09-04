@@ -30,7 +30,7 @@ module.exports = {
 
     bet = calcBetAmount(bet, balance);
 
-    if (bet > balance) {
+    if (bet > balance || !balance || balance <= 0) {
       const embed = new MessageEmbed().setColor('#e74c3c').setDescription(`${msg.author}\nNot enough coins.`);
       return msg.channel.send({ embed });
     }
