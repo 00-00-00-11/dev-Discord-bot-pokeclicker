@@ -38,19 +38,16 @@ const calcWinningsMultiplier = (slotIcons) => {
   const row1 = slotIcons.map(r => r[0]);
   const row2 = slotIcons.map(r => r[1]);
   const row3 = slotIcons.map(r => r[2]);
-  console.log([...new Set(row1)]);
-  console.log([...new Set(row2)]);
-  console.log([...new Set(row3)]);
-  // Each row
+
+  // Each Row
   if (new Set(row1).size == 1) multiplier += multipliers[icons.findIndex(i => i == row1[0])];
   if (new Set(row2).size == 1) multiplier += multipliers[icons.findIndex(i => i == row2[0])];
   if (new Set(row3).size == 1) multiplier += multipliers[icons.findIndex(i => i == row3[0])];
-  // Diagonals
+  
+  // Both Diagonals
   if (new Set([row1[0], row2[1], row3[2]]).size == 1) multiplier += multipliers[icons.findIndex(i => i == row1[0])];
   if (new Set([row3[0], row2[1], row1[2]]).size == 1) multiplier += multipliers[icons.findIndex(i => i == row3[0])];
 
-  console.log([...new Set([row1[0], row2[1], row3[2]])]);
-  console.log([...new Set([row3[0], row2[1], row1[2]])]);
   // Berries
   const berry = icons[6];
   if (row1[0] == berry) {
