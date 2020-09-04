@@ -20,7 +20,7 @@ module.exports = {
     }
 
     if (!args.length) {
-      commands.forEach(command => data.push(`${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}: ${command.description}`));
+      commands.forEach(command => data.push(`${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}: ${command.description.split('\n')[0]}`));
       return msg.channel.send(data, { code: 'http', split: true });
     }
 
@@ -34,7 +34,7 @@ module.exports = {
     const embed = new MessageEmbed()
       .setTitle(`***\`${prefix}help ${command.name}\`***`)
       .setColor('#3498db')
-      .addField('❯ Description', `\`${command.description}\``)
+      .addField('❯ Description', `${command.description}`)
       .addField('❯ Usage', `\`\`\`css\n${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}\`\`\``)
       .addField('❯ Aliases', `\`${command.aliases.join('`, `') || '-'}\``, true)
       .addField('❯ Cooldown', `\`${command.cooldown || 3} second(s)\``, true)
