@@ -11,7 +11,6 @@ module.exports = {
   botperms    : ['SEND_MESSAGES', 'EMBED_LINKS'],
   userperms   : ['SEND_MESSAGES'],
   execute     : async (msg, args) => {
-    const data = [];
     let commands = msg.client.commands;
     if (msg.channel.type === 'dm'){
       commands = commands.filter(command => !command.guildOnly);
