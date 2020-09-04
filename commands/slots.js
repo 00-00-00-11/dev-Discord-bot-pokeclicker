@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const { getAmount, addAmount } = require('../database.js');
 const { betRegex, validBet, calcBetAmount } = require('../helpers.js');
 
+const divider = 3;
 const multipliers = [
   300,
   100,
@@ -43,7 +44,7 @@ const calcWinningsMultiplier = (slotIcons) => {
   if (new Set(row1).size == 1) multiplier += multipliers[icons.findIndex(i => i == row1[0])];
   if (new Set(row2).size == 1) multiplier += multipliers[icons.findIndex(i => i == row2[0])];
   if (new Set(row3).size == 1) multiplier += multipliers[icons.findIndex(i => i == row3[0])];
-  
+
   // Both Diagonals
   if (new Set([row1[0], row2[1], row3[2]]).size == 1) multiplier += multipliers[icons.findIndex(i => i == row1[0])];
   if (new Set([row3[0], row2[1], row1[2]]).size == 1) multiplier += multipliers[icons.findIndex(i => i == row3[0])];
@@ -66,13 +67,18 @@ const calcWinningsMultiplier = (slotIcons) => {
   }
 
   // Divided by 3 as cost is 1 coin per line, we will just assume player is playing all 3 lines
-  return Math.floor((multiplier / 3) * 100) / 100;
+  return Math.floor((multiplier / divider) * 100) / 100;
 };
 
 module.exports = {
   name        : 'slots',
   aliases     : ['slot'],
-  description : 'Spin the slots for a prize',
+  description : `Spin the slots for a prize
+
+${icons.filter((icon, index) => multipliers[index]).map((icon, index) => `${icon}${icon}${icon} ║ **× ${Math.floor((multipliers[index] / divider) * 100) / 100}**`).join('\n')}
+${icons[icons.length - 1]}${icons[icons.length - 1]}➖ ║ **× ${Math.floor((6 / divider) * 100) / 100}**
+${icons[icons.length - 1]}➖➖ ║ **× ${Math.floor((2 / divider) * 100) / 100}**
+  `,
   args        : ['amount'],
   guildOnly   : true,
   cooldown    : 0.5,
