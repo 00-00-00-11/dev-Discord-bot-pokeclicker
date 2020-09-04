@@ -20,7 +20,7 @@ module.exports = {
 
     if (!args.length) {
       const embed = new MessageEmbed()
-        .setTitle('**HELP**')
+        .setTitle('HELP')
         .setDescription([
           'For more detailed information about a command use',
           '```css',
@@ -41,7 +41,7 @@ module.exports = {
     }
 
     const embed = new MessageEmbed()
-      .setTitle(`**HELP | ${command.name.toUpperCase()}**`)
+      .setTitle(`HELP | ${command.name.toUpperCase()}`)
       .setColor('#3498db')
       .addField('❯ Description', `${command.description}`)
       .addField('❯ Usage', `\`\`\`css\n${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}\`\`\``)
