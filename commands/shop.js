@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { getAmount, removeAmount } = require('../database.js');
 const { shopItems, postPages, SeededRand } = require('../helpers.js');
+const { website } = require('../config.json');
 
 const generateCode = (discordID, code) => {
   discordID = +discordID;
@@ -50,7 +51,7 @@ module.exports = {
       const embed = new MessageEmbed()
         .setColor('#3498db')
         .setDescription(msg.author)
-        .setThumbnail(item.image)
+        .setThumbnail(website + item.image)
         .addField('Name', item.name, true)
         .addField('Price', `${item.price} <:money:737206931759824918>`, true)
         .addField('Description', item.description)
@@ -88,50 +89,46 @@ module.exports = {
       const item = shopItems[itemID - 1];
       const currentBalance = await getAmount(msg.author);
 
+      // Create the embed now and edit as needed
+      const embed = new MessageEmbed()
+        .setThumbnail(website + item.image)
+        .setFooter(`Balance: ${currentBalance.toLocaleString('en-US')}`);
+
       // Item too expensive
       if (item.price > currentBalance) {
-        const embed = new MessageEmbed()
-          .setColor('#e74c3c')
+        embed.setColor('#e74c3c')
           .setDescription([
             msg.author,
             `**${item.name}** Failed to purhase!`,
             '',
             '_you cannot afford this item_',
-          ])
-          .setThumbnail(item.image)
-          .setFooter(`Balance: ${currentBalance.toLocaleString('en-US')}`);
+          ]);
 
         return msg.channel.send({ embed });
       }
 
       // Purchase item
       const remainingBalance = await removeAmount(msg.author, item.price);
-      const embed = new MessageEmbed()
-        .setColor('#2ecc71')
+      embed.setColor('#2ecc71')
         .setDescription([
           msg.author,
           `**${item.name}** Successfully purchased!`,
           '',
           '_code will be sent to you via direct message_',
-        ])
-        .setThumbnail(item.image)
-        .setFooter(`Balance: ${remainingBalance.toLocaleString('en-US')}`);
+        ]);
 
       msg.channel.send({ embed });
 
-      const userEmbed = new MessageEmbed()
-        .setColor('#2ecc71')
+      embed.setColor('#2ecc71')
         .setDescription([
           `**${item.name}** Successfully purchased!`,
           '_Enter the following code in game to claim:_',
           '```',
           generateCode(msg.author.id, item.name),
           '```',
-        ])
-        .setThumbnail(item.image)
-        .setFooter(`Balance: ${remainingBalance.toLocaleString('en-US')}`);
+        ]);
 
-      msg.author.send({ embed: userEmbed });
+      msg.author.send({ embed });
     });
   },
 };

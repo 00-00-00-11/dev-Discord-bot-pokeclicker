@@ -8,7 +8,7 @@ const {
   gameVersion,
   GameConstants,
 } = require('../helpers.js');
-const { website } = require('./config.json');
+const { website } = require('../config.json');
 
 module.exports = {
   name        : 'route',
