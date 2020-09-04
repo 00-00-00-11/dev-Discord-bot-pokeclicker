@@ -20,8 +20,18 @@ module.exports = {
     }
 
     if (!args.length) {
-      commands.forEach(command => data.push(`${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}: ${command.description.split('\n')[0]}`));
-      return msg.channel.send(data, { code: 'http', split: true });
+      const embed = new MessageEmbed()
+        .setTitle('**HELP**')
+        .setDescription([
+          'For more detailed information about a command use',
+          '```css',
+          `${prefix}help [command_name]`,
+          '```',
+        ])
+        .setColor('#3498db');
+
+      commands.forEach(command => embed.addField(`❯ ${command.name}`, [`${command.description.split('\n')[0]}`], true));
+      return msg.channel.send({ embed });
     }
 
     const name = args[0].toLowerCase();
@@ -32,7 +42,7 @@ module.exports = {
     }
 
     const embed = new MessageEmbed()
-      .setTitle(`***\`${prefix}help ${command.name}\`***`)
+      .setTitle(`**HELP | ${command.name.toUpperCase()}**`)
       .setColor('#3498db')
       .addField('❯ Description', `${command.description}`)
       .addField('❯ Usage', `\`\`\`css\n${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}\`\`\``)
