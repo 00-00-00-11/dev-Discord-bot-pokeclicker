@@ -115,18 +115,18 @@ module.exports = {
           `**${item.name}** Successfully purchased!`,
           '',
           '_code will be sent to you via direct message_',
-        ]);
+        ])
+        .setFooter(`Balance: ${remainingBalance.toLocaleString('en-US')}`);
 
       msg.channel.send({ embed });
 
-      embed.setColor('#2ecc71')
-        .setDescription([
-          `**${item.name}** Successfully purchased!`,
-          '_Enter the following code in game to claim:_',
-          '```',
-          generateCode(msg.author.id, item.name),
-          '```',
-        ]);
+      embed.setDescription([
+        `**${item.name}** Successfully purchased!`,
+        '_Enter the following code in game to claim:_',
+        '```',
+        generateCode(msg.author.id, item.name),
+        '```',
+      ]);
 
       msg.author.send({ embed });
     });
