@@ -6,7 +6,7 @@ const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
-const getLastClaimTime = async (user) => {
+const getLastClaimDailyTime = async (user) => {
   const [
     db,
     user_id,
@@ -15,12 +15,12 @@ const getLastClaimTime = async (user) => {
     getUserID(user),
   ]);
 
-  const { last_claim } = await db.get('SELECT last_claim FROM coins WHERE user=?', user_id) || { last_claim: '0' };
+  const { last_claim_daily } = await db.get('SELECT last_claim_daily FROM coins WHERE user=?', user_id) || { last_claim_daily: '0' };
   db.close();
-  return new Date(last_claim);
+  return new Date(last_claim_daily);
 };
 
-const setLastClaimTime = async (user) => {
+const setLastClaimDailyTime = async (user) => {
   const [
     db,
     user_id,
@@ -34,7 +34,7 @@ const setLastClaimTime = async (user) => {
     $date: new Date().toJSON(),
   };
 
-  await db.run('UPDATE coins SET last_claim=$date WHERE user=$user_id', data);
+  await db.run('UPDATE coins SET last_claim_daily=$date WHERE user=$user_id', data);
   db.close();
 };
 
@@ -49,7 +49,7 @@ module.exports = {
   userperms   : ['SEND_MESSAGES'],
   execute     : async (msg, args) => {
     // Check if user claimed within the last 24 hours
-    const lastClaim = await getLastClaimTime(msg.author);
+    const lastClaim = await getLastClaimDailyTime(msg.author);
     if (lastClaim >= (Date.now() - DAY)) {
       const timeLeft = (+lastClaim + DAY) - Date.now();
       const hours = Math.floor(timeLeft % DAY / HOUR);
@@ -68,7 +68,7 @@ module.exports = {
     const dailyAmount = 100;
     // Add the balance then set last claim time (incase the user doesn't exist yet)
     const balance = await addAmount(msg.author, dailyAmount, 'coins');
-    await setLastClaimTime(msg.author);
+    await setLastClaimDailyTime(msg.author);
     return msg.channel.send({
       embed: new MessageEmbed().setColor('#2ecc71').setDescription(`${msg.author}\n**+${dailyAmount.toLocaleString('en-US')}** <:money:737206931759824918>\n\nCurrent Balance: **${balance.toLocaleString('en-US')}** <:money:737206931759824918>`),
     });
