@@ -40,6 +40,9 @@ const postPages = async (msg, pages, page = 1) => {
   return botMsg;
 };
 
+const upperCaseFirstLetter = string => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+
 module.exports = {
   postPages,
+  upperCaseFirstLetter,
 };

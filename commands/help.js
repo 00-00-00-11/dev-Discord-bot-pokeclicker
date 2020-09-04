@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const { upperCaseFirstLetter } = require('../helpers.js');
 const { prefix } = require('../config.json');
 
 module.exports = {
@@ -20,7 +21,7 @@ module.exports = {
 
     if (!args.length) {
       const embed = new MessageEmbed()
-        .setTitle('HELP')
+        .setTitle('Help')
         .setDescription([
           'For more detailed information about a command use',
           '```css',
@@ -29,7 +30,7 @@ module.exports = {
         ])
         .setColor('#3498db');
 
-      commands.forEach(command => embed.addField(`❯ ${command.name}`, [`${command.description.split('\n')[0]}`], true));
+      commands.forEach(command => embed.addField(`❯ ${upperCaseFirstLetter(command.name)}`, [`${command.description.split('\n')[0]}`], true));
       return msg.channel.send({ embed });
     }
 
@@ -41,7 +42,7 @@ module.exports = {
     }
 
     const embed = new MessageEmbed()
-      .setTitle(`HELP | ${command.name.toUpperCase()}`)
+      .setTitle(`Help | ${upperCaseFirstLetter(command.name)}`)
       .setColor('#3498db')
       .addField('❯ Description', `${command.description}`)
       .addField('❯ Usage', `\`\`\`css\n${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}\`\`\``)
