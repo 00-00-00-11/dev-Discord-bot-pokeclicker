@@ -14,8 +14,7 @@ const getLastClaimDailyTime = async (user) => {
     getDB(),
     getUserID(user),
   ]);
-
-  const { last_claim_daily } = await db.get('SELECT last_claim_daily FROM coins WHERE user=?', user_id) || { last_claim_daily: '0' };
+  const { last_claim_daily = 0 } = await db.get('SELECT last_claim_daily FROM coins WHERE user=?', user_id) || {};
   db.close();
   return new Date(last_claim_daily);
 };
