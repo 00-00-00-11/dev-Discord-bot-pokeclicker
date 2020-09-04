@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { getAmount, addAmount } = require('../database.js');
 const { betRegex, validBet, calcBetAmount } = require('../helpers.js');
+const { website } = require('./config.json');
 
 const coinSides = {
   heads: 1,
@@ -19,8 +20,8 @@ const coinSides = {
 };
 
 const coinImage = {
-  1: 'https://pokeclicker-dev.github.io/pokeclicker/assets/images/currency/dungeonToken.png',
-  0: 'https://pokeclicker-dev.github.io/pokeclicker/assets/images/currency/farmPoint.png',
+  1: `${website}assets/images/currency/dungeonToken.png`,
+  0: `${website}assets/images/currency/farmPoint.png`,
 };
 
 const flipCoin = () => Math.round(Math.random());
