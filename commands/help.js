@@ -44,11 +44,17 @@ module.exports = {
     const embed = new MessageEmbed()
       .setTitle(`Help | ${upperCaseFirstLetter(command.name)}`)
       .setColor('#3498db')
-      .addField('❯ Description', `${command.description}`)
-      .addField('❯ Usage', `\`\`\`css\n${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}\`\`\``)
+      .addField('❯ Description', `${command.description}`);
+
+    if (command.helpFields) {
+      command.helpFields.forEach(([header, body, inline]) => embed.addField(header, body, !!inline));
+    }
+
+    embed.addField('❯ Usage', `\`\`\`css\n${prefix}${command.name}${command.args.map(arg=>` [${arg}]`).join('')}\`\`\``)
       .addField('❯ Aliases', `\`${command.aliases.join('`, `') || '-'}\``, true)
       .addField('❯ Cooldown', `\`${command.cooldown || 3} second(s)\``, true)
       .addField('❯ Guild Only', `\`${command.guildOnly}\``, true);
+
     msg.channel.send({ embed });
   },
 };

@@ -72,14 +72,27 @@ const calcWinningsMultiplier = (slotIcons, lines) => {
 module.exports = {
   name        : 'slots',
   aliases     : ['slot'],
-  description : `Spin the slots for a prize
-
-${icons.filter((icon, index) => multipliers[index]).map((icon, index) => `${icon}${icon}${icon} ║ **× ${multipliers[index]}**`).join('\n')}
-${icons[icons.length - 1]}${icons[icons.length - 1]}➖ ║ **× 6**
-${icons[icons.length - 1]}➖➖ ║ **× 2**
-
-_**Note:** the the multiplier is for a 1 line bet,_
-_The multiplier is then divided by however many lines you are playing._`,
+  description : 'Spin the slots for a prize',
+  helpFields: [
+    [
+      '❯ Lines:',
+      [
+        '**`1 Line:`** The middle line across',
+        '**`2 Lines:`** All 3 lines across',
+        '**`3 Lines:`** All 3 lines across and both diagonal lines',
+      ],
+    ],
+    [
+      '❯ Multipliers:',
+      [
+        `${icons.filter((icon, index) => multipliers[index]).map((icon, index) => `${icon}${icon}${icon} ║ **× ${multipliers[index]}**`).join('\n')}`,
+        `${icons[icons.length - 1]}${icons[icons.length - 1]}➖ ║ **× 6**`,
+        `${icons[icons.length - 1]}➖➖ ║ **× 2**`,
+        '',
+        '_**Note:** The multiplier is divided by however many lines you are playing._',
+      ],
+    ],
+  ],
   args        : ['amount', 'lines(3)?'],
   guildOnly   : true,
   cooldown    : 0.5,
@@ -115,7 +128,7 @@ _The multiplier is then divided by however many lines you are playing._`,
       msg.author,
       `${lines >= 3 ? '▫️' : '▪️'}`,
       `${lines >= 2 ? '▫️' : '▪️'} ║ ${slotIcons.map(r => r[0]).join(' ║ ')} ║`,
-      `▫️ ║ ${slotIcons.map(r => r[1]).join(' ║ ')} ║`,
+      `▫ ║ ${slotIcons.map(r => r[1]).join(' ║ ')} ║`,
       `${lines >= 2 ? '▫️' : '▪️'} ║ ${slotIcons.map(r => r[2]).join(' ║ ')} ║`,
       `${lines >= 3 ? '▫️' : '▪️'}`,
       `**Winnings: ${winnings.toLocaleString('en-US')} <:money:737206931759824918>**`,
