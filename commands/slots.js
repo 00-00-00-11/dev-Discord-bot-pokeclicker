@@ -33,7 +33,7 @@ const spinSlots = () => {
   return spinIcons;
 };
 
-const calcWinningsMultiplier = (slotIcons) => {
+const calcWinningsMultiplier = (slotIcons, lines) => {
   let multiplier = 0;
 
   const row1 = slotIcons.map(r => r[0]);
@@ -41,33 +41,32 @@ const calcWinningsMultiplier = (slotIcons) => {
   const row3 = slotIcons.map(r => r[2]);
 
   // Each Row
-  if (new Set(row1).size == 1) multiplier += multipliers[icons.findIndex(i => i == row1[0])];
+  if (lines >= 2 && new Set(row1).size == 1) multiplier += multipliers[icons.findIndex(i => i == row1[0])];
   if (new Set(row2).size == 1) multiplier += multipliers[icons.findIndex(i => i == row2[0])];
-  if (new Set(row3).size == 1) multiplier += multipliers[icons.findIndex(i => i == row3[0])];
+  if (lines >= 2 && new Set(row3).size == 1) multiplier += multipliers[icons.findIndex(i => i == row3[0])];
 
   // Both Diagonals
-  if (new Set([row1[0], row2[1], row3[2]]).size == 1) multiplier += multipliers[icons.findIndex(i => i == row1[0])];
-  if (new Set([row3[0], row2[1], row1[2]]).size == 1) multiplier += multipliers[icons.findIndex(i => i == row3[0])];
+  if (lines >= 3 && new Set([row1[0], row2[1], row3[2]]).size == 1) multiplier += multipliers[icons.findIndex(i => i == row1[0])];
+  if (lines >= 3 && new Set([row3[0], row2[1], row1[2]]).size == 1) multiplier += multipliers[icons.findIndex(i => i == row3[0])];
 
   // Berries
   const berry = icons[6];
-  if (row1[0] == berry) {
+  if (lines >= 2 && row1[0] == berry) {
     if (row1[1] == berry) multiplier += 6;
-    else if (row2[1] == berry) multiplier += 6;
+    else if (lines >= 3 && row2[1] == berry) multiplier += 6;
     else multiplier += 2;
   }
   if (row2[0] == berry) {
     if (row2[1] == berry) multiplier += 6;
     else multiplier += 2;
   }
-  if (row3[0] == berry) {
+  if (lines >= 2 && row3[0] == berry) {
     if (row3[1] == berry) multiplier += 6;
-    else if (row2[1] == berry) multiplier += 6;
+    else if (lines >= 3 && row2[1] == berry) multiplier += 6;
     else multiplier += 2;
   }
 
-  // Divided by 3 as cost is 1 coin per line, we will just assume player is playing all 3 lines
-  return Math.floor((multiplier / divider) * 100) / 100;
+  return Math.floor((multiplier / lines) * 100) / 100;
 };
 
 module.exports = {
@@ -75,17 +74,19 @@ module.exports = {
   aliases     : ['slot'],
   description : `Spin the slots for a prize
 
-${icons.filter((icon, index) => multipliers[index]).map((icon, index) => `${icon}${icon}${icon} ║ **× ${Math.floor((multipliers[index] / divider) * 100) / 100}**`).join('\n')}
-${icons[icons.length - 1]}${icons[icons.length - 1]}➖ ║ **× ${Math.floor((6 / divider) * 100) / 100}**
-${icons[icons.length - 1]}➖➖ ║ **× ${Math.floor((2 / divider) * 100) / 100}**
-  `,
-  args        : ['amount'],
+${icons.filter((icon, index) => multipliers[index]).map((icon, index) => `${icon}${icon}${icon} ║ **× ${multipliers[index]}**`).join('\n')}
+${icons[icons.length - 1]}${icons[icons.length - 1]}➖ ║ **× 6**
+${icons[icons.length - 1]}➖➖ ║ **× 2**
+
+_**Note:** the the multiplier is for a 1 line bet,_
+_The multiplier is then divided by however many lines you are playing._`,
+  args        : ['amount', 'lines(3)?'],
   guildOnly   : true,
   cooldown    : 0.5,
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['SEND_MESSAGES'],
   execute     : async (msg, args) => {
-    let bet = args.find(a => betRegex.test(a));
+    let [ bet, lines = 3 ] = args;
 
     // Check the bet amount is correct
     if (!validBet(bet)) {
@@ -102,18 +103,21 @@ ${icons[icons.length - 1]}➖➖ ║ **× ${Math.floor((2 / divider) * 100) / 10
       return msg.channel.send({ embed });
     }
 
+    // Check the player has entered a correct amount of lines
+    if (!lines || isNaN(lines) || lines > 3 || lines < 1) lines = 3;
+
     const slotIcons = spinSlots();
 
-    const multiplier = calcWinningsMultiplier(slotIcons);
+    const multiplier = calcWinningsMultiplier(slotIcons, lines);
     const winnings = Math.floor(bet * multiplier);
 
     const output = [
       msg.author,
-      '',
-      `║ ${slotIcons.map(r => r[0]).join(' ║ ')} ║`,
-      `║ ${slotIcons.map(r => r[1]).join(' ║ ')} ║`,
-      `║ ${slotIcons.map(r => r[2]).join(' ║ ')} ║`,
-      '',
+      `${lines >= 3 ? '▫️' : '▪️'}`,
+      `${lines >= 2 ? '▫️' : '▪️'} ║ ${slotIcons.map(r => r[0]).join(' ║ ')} ║`,
+      `▫️ ║ ${slotIcons.map(r => r[1]).join(' ║ ')} ║`,
+      `${lines >= 2 ? '▫️' : '▪️'} ║ ${slotIcons.map(r => r[2]).join(' ║ ')} ║`,
+      `${lines >= 3 ? '▫️' : '▪️'}`,
       `**Winnings: ${winnings.toLocaleString('en-US')} <:money:737206931759824918>**`,
     ];
 
