@@ -125,11 +125,11 @@ module.exports = {
 
     const output = [
       msg.author,
-      `${lines >= 3 ? '▫️' : '▪️'}`,
-      `${lines >= 2 ? '▫️' : '▪️'} ║ ${slotIcons.map(r => r[0]).join(' ║ ')} ║`,
-      `▫ ║ ${slotIcons.map(r => r[1]).join(' ║ ')} ║`,
-      `${lines >= 2 ? '▫️' : '▪️'} ║ ${slotIcons.map(r => r[2]).join(' ║ ')} ║`,
-      `${lines >= 3 ? '▫️' : '▪️'}`,
+      '',
+      `║ ${slotIcons.map(r => r[0]).join(' ║ ')} ║`,
+      `║ ${slotIcons.map(r => r[1]).join(' ║ ')} ║`,
+      `║ ${slotIcons.map(r => r[2]).join(' ║ ')} ║`,
+      '',
       `**Winnings: ${winnings.toLocaleString('en-US')} <:money:737206931759824918>**`,
     ];
 
