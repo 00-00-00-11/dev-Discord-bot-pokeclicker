@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 const { addAmount } = require('../database.js');
 
 module.exports = {
@@ -10,14 +11,29 @@ module.exports = {
   botperms    : ['SEND_MESSAGES'],
   userperms   : ['MANAGE_GUILD'],
   execute     : async (msg, args) => {
-    const points = +(args.find(arg=>/^-?\d+$/.test(arg)) || 10);
-    if (isNaN(points))
-      return msg.reply('Invalid number of points specified..');
-    if (!msg.mentions.users.size)
-      return msg.reply('You didn\'t mention who to give points..');
-    // Add 1 point to the verifier
-    const user = msg.mentions.users.first();
-    const total_points = await addAmount(user, points);
-    msg.channel.send(`${user} given ${points.toLocaleString('en-NZ')} points, New total is ${total_points.toLocaleString('en-NZ')} points`);
+    const amount = +(args.find(arg=>/^-?\d+$/.test(arg)) || 10);
+    
+    const embed = new MessageEmbed().setColor('#e74c3c');
+
+    if (isNaN(amount)) {
+      embed.setDescription('Invalid amount specified..');
+      return msg.channel.send({ embed });
+    }
+    if (!msg.mentions.users.size) {
+      embed.setDescription('Invalid amount specified..');
+      return msg.channel.send({ embed });
+    }
+
+    const output = [msg.author, `Gifted ${amount.toLocaleString('en-NZ')} <:money:737206931759824918> to the following users`, ''];
+
+    for (const [, user] of [...msg.mentions.users]) {
+      const balance = await addAmount(user, amount);
+      output.push(`${user}: ${balance.toLocaleString('en-NZ')} <:money:737206931759824918>`);
+    }
+
+    embed.setColor('#2ecc71')
+      .setDescription(output);
+
+    msg.channel.send({ embed });
   },
 };
