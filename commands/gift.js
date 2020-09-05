@@ -20,7 +20,7 @@ module.exports = {
       return msg.channel.send({ embed });
     }
     if (!msg.mentions.users.size) {
-      embed.setDescription('Invalid amount specified..');
+      embed.setDescription('No users mentioned..');
       return msg.channel.send({ embed });
     }
 
