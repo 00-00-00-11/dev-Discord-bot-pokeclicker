@@ -2,9 +2,9 @@ const { MessageEmbed } = require('discord.js');
 const { addAmount } = require('../database.js');
 
 module.exports = {
-  name        : 'give',
+  name        : 'gift',
   aliases     : [],
-  description : 'Give points to specified user',
+  description : 'Gift points to specified user',
   args        : ['points', '@user'],
   guildOnly   : true,
   cooldown    : 1,
