@@ -1,8 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { getAmount, addAmount } = require('../database.js');
-const { betRegex, validBet, calcBetAmount } = require('../helpers.js');
+const { validBet, calcBetAmount } = require('../helpers.js');
 
-const divider = 3;
 const multipliers = [
   300,
   100,
