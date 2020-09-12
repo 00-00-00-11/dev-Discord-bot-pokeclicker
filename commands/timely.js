@@ -30,7 +30,7 @@ module.exports = {
 
     // User already claimed within last 2 hours
     if (last_claim >= (Date.now() - (2 * HOUR))) {
-      const time_left = (+last_claim + DAY) - Date.now();
+      const time_left = (+last_claim + (2 * HOUR)) - Date.now();
       const hours = Math.floor(time_left % DAY / HOUR);
       const minutes = Math.floor(time_left % HOUR / MINUTE);
       const seconds = Math.floor(time_left % MINUTE / SECOND);
@@ -39,7 +39,7 @@ module.exports = {
       if (+hours || +minutes) timeRemaining += `${minutes} minutes `;
       timeRemaining += `${seconds} seconds`;
       return msg.channel.send({
-        embed: new MessageEmbed().setColor('#e74c3c').setDescription(`${msg.author}\nYou've already claimed your <:money:737206931759824918> for today\nYou can claim again in ${timeRemaining}`),
+        embed: new MessageEmbed().setColor('#e74c3c').setDescription(`${msg.author}\nYou've already claimed your <:money:737206931759824918> too recently\nYou can claim again in ${timeRemaining}`),
       });
     }
 
@@ -50,7 +50,7 @@ module.exports = {
     }
 
     // Add the coins to the users balance, set last claimed time
-    const timelyAmount = 100 + calcStreakBonus(streak);
+    const timelyAmount = 10 + calcStreakBonus(streak);
     // Add the balance then set last claim time (incase the user doesn't exist yet)
     const balance = await addAmount(msg.author, timelyAmount, 'coins');
     await updateClaimDate(msg.author, 'timely_claim');
