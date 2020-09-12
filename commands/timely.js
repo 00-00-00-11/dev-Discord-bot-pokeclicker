@@ -12,18 +12,13 @@ const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
-const calcStreakBonus = (streak) => {
-  const bigStreak = Math.max(0, Math.min(5, streak));
-  streak -= bigStreak;
-  const midStreak = Math.max(0, Math.min(10, streak));
-  streak -= midStreak;
-  return (bigStreak * 10) + (midStreak * 5) + streak;
-};
+// maximum of 10, 1 extra per streak
+const calcStreakBonus = (streak) => Math.max(0, Math.min(10, streak));
 
 module.exports = {
-  name        : 'claim',
-  aliases     : ['daily'],
-  description : 'Claim your daily coins',
+  name        : 'timely',
+  aliases     : [],
+  description : 'Claim your 2 hourly coins',
   args        : [],
   guildOnly   : true,
   cooldown    : 3,
@@ -31,10 +26,10 @@ module.exports = {
   userperms   : ['SEND_MESSAGES'],
   execute     : async (msg, args) => {
     // Check if user claimed within the last 24 hours
-    let { last_claim, streak } = await getLastClaim(msg.author, 'daily_claim');
+    let { last_claim, streak } = await getLastClaim(msg.author, 'timely_claim');
 
-    // User already claimed within last 24 hours
-    if (last_claim >= (Date.now() - DAY)) {
+    // User already claimed within last 2 hours
+    if (last_claim >= (Date.now() - (2 * HOUR))) {
       const time_left = (+last_claim + DAY) - Date.now();
       const hours = Math.floor(time_left % DAY / HOUR);
       const minutes = Math.floor(time_left % HOUR / MINUTE);
@@ -48,20 +43,20 @@ module.exports = {
       });
     }
 
-    // Should the claim streak be reset (if more than 2 days)
-    if (last_claim < (Date.now() - (2 * DAY))) {
-      await resetClaimStreak(msg.author, 'daily_claim');
+    // Should the claim streak be reset (if more than 1 day)
+    if (last_claim < (Date.now() - DAY)) {
+      await resetClaimStreak(msg.author, 'timely_claim');
       streak = 0;
     }
 
     // Add the coins to the users balance, set last claimed time
-    const dailyAmount = 100 + calcStreakBonus(streak);
+    const timelyAmount = 100 + calcStreakBonus(streak);
     // Add the balance then set last claim time (incase the user doesn't exist yet)
-    const balance = await addAmount(msg.author, dailyAmount, 'coins');
-    await updateClaimDate(msg.author, 'daily_claim');
-    await bumpClaimStreak(msg.author, 'daily_claim');
+    const balance = await addAmount(msg.author, timelyAmount, 'coins');
+    await updateClaimDate(msg.author, 'timely_claim');
+    await bumpClaimStreak(msg.author, 'timely_claim');
     return msg.channel.send({
-      embed: new MessageEmbed().setColor('#2ecc71').setDescription(`${msg.author}\n**+${dailyAmount.toLocaleString('en-US')}** <:money:737206931759824918>\n\nCurrent Balance: **${balance.toLocaleString('en-US')}** <:money:737206931759824918>\nCurrent Streak: **${streak + 1}**`),
+      embed: new MessageEmbed().setColor('#2ecc71').setDescription(`${msg.author}\n**+${timelyAmount.toLocaleString('en-US')}** <:money:737206931759824918>\n\nCurrent Balance: **${balance.toLocaleString('en-US')}** <:money:737206931759824918>\nCurrent Streak: **${streak + 1}**`),
     });
   },
 };
