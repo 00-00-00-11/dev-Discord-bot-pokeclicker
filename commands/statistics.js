@@ -23,12 +23,15 @@ module.exports = {
       messages,
       commands,
       // Games Corner
-      games_played,
-      games_won,
-      games_tied,
-      games_lost,
-      coins_bet,
-      coins_won,
+      gc_games_played,
+      gc_games_won,
+      gc_games_tied,
+      gc_games_lost,
+      gc_coins_bet,
+      gc_coins_won,
+      // Quiz
+      qz_answered,
+      qz_coins_won,
     ] = await Promise.all([
       getStatistic(user, 'messages'),
       getStatistic(user, 'commands'),
@@ -39,6 +42,9 @@ module.exports = {
       getStatistic(user, 'gc_games_lost'),
       getStatistic(user, 'gc_coins_bet'),
       getStatistic(user, 'gc_coins_won'),
+      // Quiz
+      getStatistic(user, 'qz_answered'),
+      getStatistic(user, 'qz_coins_won'),
     ]);
 
     embed.addField('__***#general***__', [
@@ -47,13 +53,20 @@ module.exports = {
     ]);
 
     embed.addField('__***#games-corner***__', [
-      `**❯ Games Played:** ${games_played.toLocaleString('en-US')}`,
-      `**❯ Games Won:** ${games_won.toLocaleString('en-US')}`,
-      `**❯ Games Tied:** ${games_tied.toLocaleString('en-US')}`,
-      `**❯ Games Lost:** ${games_lost.toLocaleString('en-US')}`,
-      `**❯ Coins Bet:** ${coins_bet.toLocaleString('en-US')}`,
-      `**❯ Coins Won:** ${coins_won.toLocaleString('en-US')}`,
+      `**❯ Games Played:** ${gc_games_played.toLocaleString('en-US')}`,
+      `**❯ Games Won:** ${gc_games_won.toLocaleString('en-US')}`,
+      `**❯ Games Tied:** ${gc_games_tied.toLocaleString('en-US')}`,
+      `**❯ Games Lost:** ${gc_games_lost.toLocaleString('en-US')}`,
+      `**❯ Coins Bet:** ${gc_coins_bet.toLocaleString('en-US')}`,
+      `**❯ Coins Won:** ${gc_coins_won.toLocaleString('en-US')}`,
     ]);
+
+    embed.addField('__***#bot-quiz***__', [
+      `**❯ Q's Answered:** ${qz_answered.toLocaleString('en-US')}`,
+      `**❯ Coins Won:** ${qz_coins_won.toLocaleString('en-US')}`,
+    ]);
+
+
     return msg.channel.send({ embed });
   },
 };

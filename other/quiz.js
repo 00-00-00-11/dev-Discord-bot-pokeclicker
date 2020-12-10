@@ -30,8 +30,8 @@ const newQuiz = async (guild) => {
       const m = collected.first();
 
       const balance = await addAmount(m.author, quiz.amount);
-      addStatistic(m.author, 'quiz_answered');
-      addStatistic(m.author, 'quiz_coins_won', quiz.amount);
+      addStatistic(m.author, 'qz_answered');
+      addStatistic(m.author, 'qz_coins_won', quiz.amount);
 
       const embed = new MessageEmbed()
         .setDescription([
