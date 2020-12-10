@@ -1,24 +1,17 @@
 const { MessageEmbed } = require('discord.js');
 const { quizChannelID, website } = require('../config.js');
-const { getAmount, addAmount } = require('../database.js');
+const { addAmount, addStatistic } = require('../database.js');
 const {
   pokemonList,
-  randomFromArray,
-
-  // unused
-  LevelType,
   PokemonType,
-  EvolutionType,
-  GameConstants,
-  PokemonLocationType,
-  pokemonTypeIcons,
-  gameVersion,
+  randomFromArray,
 } = require('../helpers.js');
 
 const money_icon = '<:money:737206931759824918>';
 
 
 const newQuiz = async (guild) => {
+  if (!quizChannelID) return;
   const quiz_channel = await guild.channels.cache.find(c => c.id == quizChannelID);
   if (!quiz_channel) return;
 
@@ -28,8 +21,8 @@ const newQuiz = async (guild) => {
 
   const filter = m => quiz.answer.test(m.content);
 
-  // Time limit in minutes
-  const timeLimit = (25 + Math.floor(Math.random() * 5)) * 60 * 1000;
+  // Time limit in minutes (5 → 30 minutes)
+  const timeLimit = (Math.floor(Math.random() * 26) + 5) * 60 * 1000;
 
   // errors: ['time'] treats ending because of the time limit as an error
   quiz_channel.awaitMessages(filter, { max: 1, time:  timeLimit, errors: ['time'] })
@@ -37,6 +30,8 @@ const newQuiz = async (guild) => {
       const m = collected.first();
 
       const balance = await addAmount(m.author, quiz.amount);
+      addStatistic(m.author, 'quiz_answered');
+      addStatistic(m.author, 'quiz_coins_won', quiz.amount);
 
       const embed = new MessageEmbed()
         .setDescription([
@@ -85,9 +80,33 @@ const whosThatPokemon = () => {
   };
 };
 
+const pokemonType = () => {
+  const pokemon = randomFromArray(pokemonList);
+  const types = pokemon.type.map(t => PokemonType[t]);
+
+  const answer = new RegExp(`^(${types.join('|') + (types.length > 1 ? `)\\s+?(${types.join('|')}` : '')})\\b`, 'i');
+  const amount = Math.floor(Math.random() * 8) * 10 + 30;
+
+  const shiny = !Math.floor(Math.random() * 128);
+
+  const embed = new MessageEmbed()
+    .setTitle('What\'s the type?')
+    .setDescription(`What is this Pokemons type(s)?\n**+${amount} ${money_icon}**`)
+    .setThumbnail(`${website}assets/images/${shiny ? 'shiny' : ''}pokemon/${pokemon.id}.png`)
+    .setColor('#3498db');
+
+  return {
+    embed,
+    answer,
+    amount,
+  };
+};
+
 const quizTypes = [
   whosThatPokemon,
   whosThatPokemon,
+  whosThatPokemon,
+  pokemonType,
 ];
 
 module.exports = {
